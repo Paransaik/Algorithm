@@ -3,9 +3,9 @@ package DP;
 import java.util.Scanner;
 
 // 2022.04.01.
-// DP 0-1 Knapsack 1차원 배열
+// DP 0-1 Knapsack 2차원 2열 배열
 
-public class DP_Knapsack3 {
+public class DP_Knapsack2_2Toggle {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -14,7 +14,7 @@ public class DP_Knapsack3 {
         int[] weights = new int[N + 1]; // 물건의 무게
         int[] profits = new int[N + 1]; // 물건의 가치
 
-        int[] D = new int[W + 1];
+        int[][] D = new int[2][W + 1];
         // 물건 0일 때 모든 무게를 만족하는 최적값0: D[0][0~W]
         // 무게 0에 대해 모든 물건의 최적값0: D[0~N][0]
 
@@ -23,9 +23,15 @@ public class DP_Knapsack3 {
         for (int i = 1; i <= N; i++) {
             for (int w = 1; w <= W; w++) {
                 // 해당 물건의 무게로 w 가방에 가방을 담을 수 있다면
-                D[w] = Math.max(D[w], D[w - weights[i]] + profits[i]);
+                if (weights[i] <= w) {
+                    D[current][w] = Math.max(D[before][w], D[before][w - weights[i]] + profits[i]);
+                } else { // 없다면
+                    D[current][w] = D[before][w];
+                }
             }
+            before ^= 1;
+            current ^= 1;
         }
-        System.out.println(D[W]);
+        System.out.println(D[N][W]);
     }
 }
